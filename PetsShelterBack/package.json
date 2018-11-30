@@ -1,0 +1,14 @@
+{
+  "name": "petsshelterback",
+  "version": "1.0.0",
+  "description": "Project developpement web",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
