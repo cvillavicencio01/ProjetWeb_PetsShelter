@@ -1,13 +1,53 @@
+
+'use strict';
+
+const serverPort = 3000;
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
+const yaml = require('js-yaml');
+const fs = require('fs');
+const path = require('path');
+var cors = require('cors')
 
-module.exports = app; // for testing
+var http = require('http');
+var swaggerTools = require('swagger-tools');
 
-var config = {
-  appRoot: __dirname // required config
+var app = express();
+app.use(cors())
+
+
+// SwaggerRouter configuration
+var options = {
+  controllers: path.join(__dirname, 'api/controllers'),
+  useStubs: process.env.NODE_ENV === 'development' ? true : false // Conditionally turn on stubs (mock mode)
 };
 
-app.listen(port, function () {
-  console.log('Example app listening on port 3000!')
-})
+
+// Get swagger YALM document
+var swaggerDoc = null;
+try {
+  var swaggerDoc = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'api/swagger/swagger.yaml'), 'utf8'));
+  console.log(swaggerDoc);
+} catch (e) {
+  console.log(e);
+}
+
+
+// Initialize the Swagger middleware
+swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
+  // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
+  app.use(middleware.swaggerMetadata());
+
+  // Validate Swagger requests
+  app.use(middleware.swaggerValidator());
+
+  // Route validated requests to appropriate controller
+  app.use(middleware.swaggerRouter(options));
+
+  // Serve the Swagger documents and Swagger UI
+  app.use(middleware.swaggerUi());
+
+  // Start the server
+  http.createServer(app).listen(serverPort, function () {
+    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+  });
+});
