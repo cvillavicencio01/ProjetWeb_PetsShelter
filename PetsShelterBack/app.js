@@ -1,6 +1,8 @@
 
 'use strict';
 
+require('dotenv').config()
+
 const serverPort = 3000;
 const express = require('express');
 const yaml = require('js-yaml');
@@ -12,6 +14,18 @@ var http = require('http');
 var swaggerTools = require('swagger-tools');
 
 var app = express();
+
+
+// Set up mongoose connection
+var mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false); //suppression DeprecationWarning: collection.findAndModify is deprecated.
+var mongoDB = 'mongodb://'+ process.env.DB_USER+':'+process.env.DB_PASS+'@'+process.env.DB_HOST;
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+
 app.use(cors())
 
 
@@ -26,7 +40,7 @@ var options = {
 var swaggerDoc = null;
 try {
   var swaggerDoc = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'api/swagger/swagger.yaml'), 'utf8'));
-  console.log(swaggerDoc);
+  //console.log(swaggerDoc);
 } catch (e) {
   console.log(e);
 }
