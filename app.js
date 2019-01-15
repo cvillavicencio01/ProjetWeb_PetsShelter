@@ -3,7 +3,7 @@
 
 require('dotenv').config()
 
-const serverPort = 3000;
+var serverPort = process.env.PORT || 8080;
 const express = require('express');
 const yaml = require('js-yaml');
 const fs = require('fs');
