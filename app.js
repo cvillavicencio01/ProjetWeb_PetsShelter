@@ -12,6 +12,9 @@ var cors = require('cors')
 
 var http = require('http');
 var swaggerTools = require('swagger-tools');
+var jwt = require('./api/helpers/jwt');
+var errorHandler = require('./api/helpers/errorhandler');
+
 
 var app = express();
 
@@ -19,6 +22,7 @@ var app = express();
 // Set up mongoose connection
 var mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false); //suppression DeprecationWarning: collection.findAndModify is deprecated.
+mongoose.set('useCreateIndex', true);
 var mongoDB = 'mongodb://'+ process.env.DB_USER+':'+process.env.DB_PASS+'@'+process.env.DB_HOST;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
@@ -27,6 +31,9 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 app.use(cors())
+
+app.use(jwt());
+app.use(errorHandler);
 
 
 // SwaggerRouter configuration

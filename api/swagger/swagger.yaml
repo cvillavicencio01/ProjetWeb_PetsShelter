@@ -121,41 +121,144 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
+  /authenticate:
+    x-swagger-router-controller: user.controller
+    post:
+      description: Authenticate user
+      operationId: authenticate
       parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+        - in: body
+          name: login
+          description: The user and password tuple
+          schema:
+            $ref: "#/definitions/Login"
       responses:
-        "200":
+        "201":
           description: Success
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
+            $ref: "#/definitions/GetUserResponse"
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /register:
+    x-swagger-router-controller: user.controller
+    post:
+      description: Create a new user
+      operationId: register
+      parameters:
+        - in: body
+          name: user
+          description: The user to be created.
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /users/current:
+    x-swagger-router-controller: user.controller
+    get:
+      description: Get current user
+      operationId: getCurrentUser
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /users/{id}:
+    x-swagger-router-controller: user.controller
+    get:
+      description: Get user by id
+      operationId: getById
+      parameters:
+        - name: id #important !!!, #name# is a property of swagger
+          type: string #id is a string type
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    put:
+      description: User update
+      operationId: update
+      parameters:
+        - name: id  # the id to modify
+          description: User id
+          type: string
+          in: path
+          required: true
+        - in: body  #the modified data
+          name: user
+          description: The user to update.
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      description: User delete
+      operationId: remove
+      parameters:
+        - name: id
+          description: User id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
+
+  Login:
+    type: object
     properties:
-      message:
+      username:
         type: string
+        description: Username
+      password:
+        type: string
+        description: Password
+    required:
+      - username
+      - password
 
   Specie:
     type: object
@@ -171,7 +274,7 @@ definitions:
     properties:
       id:
         type: string
-        description: Identifier
+        description: Id
       name:
         type: string
         description: Name of the Specie
@@ -187,6 +290,62 @@ definitions:
           $ref: "#/definitions/GetSpecieResponse"
     required:
       - species
+
+
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+        description: Username
+      email:
+        type: string
+        description: User email
+      firstName:
+        type: string
+        description: User first name
+      lastName:
+        type: string
+        description: User last name
+      password:
+        type: string
+        description: User password
+    required:
+      - username
+      - email
+      - firstName
+      - lastName
+      - password
+
+  GetUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Id
+      username:
+        type: string
+        description: Username
+      email:
+        type: string
+        description: User email
+      firstName:
+        type: string
+        description: User first name
+      lastName:
+        type: string
+        description: User last name
+      createdDate:
+        type: string
+        description: User created date
+    required:
+      - id
+      - username
+      - email
+      - firstName
+      - lastName
+      - createdDate
+
 
   GeneralResponse:
     type: object
