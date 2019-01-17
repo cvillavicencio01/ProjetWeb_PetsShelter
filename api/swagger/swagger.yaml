@@ -121,6 +121,27 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /pets:
+    x-swagger-router-controller: pet.controller
+    post:
+      description: Add a new pet to the list
+      operationId: createPet
+      parameters:
+        - in: body
+          name: pet
+          description: The pet to be created.
+          schema:
+            $ref: "#/definitions/Pet"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetSpecieResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /authenticate:
     x-swagger-router-controller: user.controller
     post:
@@ -244,6 +265,7 @@ paths:
 
   /swagger:
     x-swagger-pipe: swagger_raw
+
 # complex objects have schema definitions
 definitions:
 
@@ -291,6 +313,92 @@ definitions:
     required:
       - species
 
+  Pet:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Pet's name
+      specie:
+        type: string
+        description: Pet's specie
+      breed:
+        type: string
+        description: Pet's breed
+      lat:
+        type: number
+        format: double
+        description: Latitude of last pet's position
+      lon:
+        type: number
+        format: double
+        description: Longitude of last pet's position
+      lostDate:
+        type: string
+        description: Day that the pet was lost
+      status:
+        type: string
+        description: Pet status
+      description:
+        type: string
+        description: Some extra description about pet
+    required:
+      - name
+      - specie
+      - status
+
+  GetPetResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Id
+      name:
+        type: string
+        description: Pet's name
+      specie:
+        type: string
+        description: Pet's specie
+      breed:
+        type: string
+        description: Pet's breed
+      lat:
+        type: number
+        format: double
+        description: Latitude of last pet's position
+      lon:
+        type: number
+        format: double
+        description: Longitude of last pet's position
+      lostDate:
+        type: string
+        description: Day that the pet was lost
+      status:
+        type: string
+        description: Pet status
+      description:
+        type: string
+        description: Some extra description about pet
+      image:
+        type: string
+        description: Image url
+      thumb:
+        type: string
+        description: Thumb image url
+    required:
+      - name
+      - specie
+      - status
+
+  GetPetListResponse:
+    properties:
+      pets:
+        type: array
+        description: Pets list
+        items:
+          $ref: "#/definitions/GetPetResponse"
+    required:
+      - pets
 
   User:
     type: object
@@ -345,7 +453,6 @@ definitions:
       - firstName
       - lastName
       - createdDate
-
 
   GeneralResponse:
     type: object
