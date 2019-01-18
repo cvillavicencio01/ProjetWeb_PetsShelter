@@ -20,8 +20,8 @@ const ERR_DELETE_EXISTS_ASSOCIATED = 'It\' not possible to delete the pet. There
 async function createPet(req) {
 
   var pet = new Pet(req.body);
-  pet.image = req.file.url;
-  pet.thumb = req.file.url.replace('upload/', 'upload/c_thumb,w_200/');
+  //pet.image = req.file.url;
+  //pet.thumb = req.file.url.replace('upload/', 'upload/c_thumb,w_200/');
   pet.id = shortid.generate();
 
   return await pet.save();
