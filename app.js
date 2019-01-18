@@ -8,16 +8,14 @@ const express = require('express');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require('path');
-var cors = require('cors')
+var cors = require('cors');
 
 var http = require('http');
 var swaggerTools = require('swagger-tools');
 var jwt = require('./api/helpers/jwt');
 var errorHandler = require('./api/helpers/errorhandler');
 
-
 var app = express();
-
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
@@ -35,6 +33,7 @@ app.use(cors())
 app.use(jwt());
 app.use(errorHandler);
 
+app.use( require('./api/controllers/petimage.controller'));
 
 // SwaggerRouter configuration
 var options = {

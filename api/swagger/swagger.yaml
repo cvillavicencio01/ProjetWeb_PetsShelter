@@ -124,14 +124,52 @@ paths:
   /pets:
     x-swagger-router-controller: pet.controller
     post:
+      consumes:
+         - multipart/form-data
       description: Add a new pet to the list
-      operationId: createPet
+      #operationId: createPet
       parameters:
-        - in: body
-          name: pet
-          description: The pet to be created.
-          schema:
-            $ref: "#/definitions/Pet"
+        - in: formData
+          name: image
+          type: file
+          description: Pet image
+          required: false
+        - in: formData
+          name: name
+          type: string
+          description: Pet's name
+        - in: formData
+          name: specie
+          type: string
+          description: Pet's specie
+        - in: formData
+          name: breed
+          type: string
+          description: Pet's breed
+        - in: formData
+          name: lat
+          type: number
+          format: double
+          description: Latitude of last pet's position
+        - in: formData
+          name: lon
+          type: number
+          format: double
+          description: Longitude of last pet's position
+        - in: formData
+          name: lostDate
+          type: string
+          description: Day that the pet was lost
+        - in: formData
+          name: status
+          type: string
+          description: Pet status
+        - in: formData
+          name: description
+          type: string
+          description: Some extra description about pet
+  #        schema:
+  #          $ref: "#/definitions/Pet"
       responses:
         "201":
           description: Success
