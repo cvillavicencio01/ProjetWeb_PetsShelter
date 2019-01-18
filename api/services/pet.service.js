@@ -3,10 +3,10 @@
 var _ = require('lodash');
 var shortid = require('shortid');
 
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 
 var Pet = require('../models/pet.model');
-
-//var specieRepository = require('../repositories/specie.repository');
 var messageHelper = require('../helpers/message.helper');
 
 const ERR_CREATE_ALREADY_EXISTS_WITH_SAME_NAME = 'It\'s not possible to create the pet. There is a pet with the same name in the system';
@@ -28,9 +28,14 @@ async function createPet(req) {
 }
 
 
+async function getPetById(id) {
+    return await Pet.find({id:id});
+}
+
 
 module.exports = {
   createPet,
+  getPetById,
   ERR_CREATE_ALREADY_EXISTS_WITH_SAME_NAME,
   ERR_UPDATE_ALREADY_EXISTS_WITH_SAME_NAME,
   ERR_UPDATE_NOT_FOUND_BY_ID,

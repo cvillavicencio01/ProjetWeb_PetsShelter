@@ -127,7 +127,6 @@ paths:
       consumes:
          - multipart/form-data
       description: Add a new pet to the list
-      #operationId: createPet
       parameters:
         - in: formData
           name: image
@@ -168,13 +167,31 @@ paths:
           name: description
           type: string
           description: Some extra description about pet
-  #        schema:
-  #          $ref: "#/definitions/Pet"
       responses:
         "201":
           description: Success
           schema:
             $ref: "#/definitions/GetSpecieResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /pets/{id}:
+    x-swagger-router-controller: pet.controller
+    get:
+      description: Get a pet by id
+      operationId: getPetById
+      parameters:
+        - name: id #important !!!, #name# is a property of swagger
+          type: string #id is a string type
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetPetResponse"
         default:
           description: Error
           schema:

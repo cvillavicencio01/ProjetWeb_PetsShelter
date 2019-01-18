@@ -33,15 +33,12 @@ router.post('/pets', createPet);
 module.exports = router;
 
 function createPet(req, res, next){
-
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       controllerHelper.handleErrorResponse(MODULE_NAME, createPet.name, err, res);
     } else if (err) {
       controllerHelper.handleErrorResponse(MODULE_NAME, createPet.name, err, res);
     }
-    console.log(req);
-
     petService.createPet(req).then(pet => pet ? res.json(pet) : res.status(400).json({ message: 'Create pet error' }) );
   });
 
