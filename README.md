@@ -14,3 +14,9 @@ npm run serve
 ```
 npm run build
 ```
+
+
+### Back-End Docs 
+```
+https://dry-shore-29528.herokuapp.com/docs/
+```
